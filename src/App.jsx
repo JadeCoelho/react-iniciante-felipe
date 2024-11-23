@@ -5,23 +5,25 @@ import { v4 } from "uuid";
 import Title from "./components/Title";
 
 function App() {
-  const [tasks, setTasks] = useState(
-    JSON.parse(localStorage.getItem("tasks") || [])
-  );
+  const [tasks, setTasks] = useState(() => {
+    // JSON.parse(localStorage.getItem("tasks") || [])
+    const storedTasks = localStorage.getItem("tasks");
+    return storedTasks ? JSON.parse(storedTasks) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
   useEffect(() => {
-    async function fetchTasks() {
+    const fetchTasks = async () => {
       const response = await fetch(
         "https://jsonplaceholder.typicode.com/todos?_limit=18",
         { method: "GET" }
       );
       const data = await response.json();
       setTasks(data);
-    }
+    };
 
     // const fetchTasks = async () => {
     //   const response = await fetch(
